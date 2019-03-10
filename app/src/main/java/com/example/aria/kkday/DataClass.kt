@@ -6,7 +6,7 @@ class DetailData(var imageId: Int, var name: String, var location: String, var r
 class SimpleData(var imageId: Int, var name: String)
 
 class Data(var context: Context) {
-    private var titleList = mutableListOf("精選城市", "春日櫻花 浪漫獻映", "為你推薦")
+    private var titleList = mutableListOf("最近瀏覽", "精選城市", "春日櫻花 浪漫獻映", "為你推薦")
 
     private var detailDataNameList = mutableListOf(
             "【2019 京都賞櫻必備】嵐山小火車保證有位限量車票（季節限定）",
@@ -69,7 +69,7 @@ class Data(var context: Context) {
 
     fun getSimpleDataList(): MutableList<SimpleData> {
         var simpleDataList = mutableListOf<SimpleData>()
-        for (i in 0 until 5) {
+        for (i in 0 .. 5) {
             val name = "simple_img${i + 1}"
             val id = context.resources.getIdentifier(name, "drawable", context.packageName)
             simpleDataList.add(SimpleData(id, simpleDataNameList[i]))
@@ -80,9 +80,11 @@ class Data(var context: Context) {
 
     fun getDetailDataList(): MutableList<DetailData> {
         var detailDataList = mutableListOf<DetailData>()
-        for (i in 0 until 7) {
-            val name = "img${i + 1}"
-            val id = context.resources.getIdentifier(name, "drawable", context.packageName)
+        var name : String
+        var id: Int
+        for (i in 0 .. 7) {
+            name = "img${i + 1}"
+            id = context.resources.getIdentifier(name, "drawable", context.packageName)
             detailDataList.add(
                     DetailData(
                             id,
@@ -94,6 +96,19 @@ class Data(var context: Context) {
         }
 
         return detailDataList
+    }
+
+    fun getDetailContentImgList(): MutableList<Int>{
+        var detailContentImgList = mutableListOf<Int>()
+        var name = "img1"
+        var id = context.resources.getIdentifier(name, "drawable", context.packageName)
+        detailContentImgList.add(id)
+        for(i in 2 .. 9){
+            name = "img1_$i"
+            id = context.resources.getIdentifier(name, "drawable", context.packageName)
+            detailContentImgList.add(id)
+        }
+        return detailContentImgList
     }
 
 

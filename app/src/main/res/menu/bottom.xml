@@ -6,6 +6,11 @@
             android:icon="@drawable/ic_icons8_home" app:showAsAction="always"/>
 
     <item
+            android:id="@+id/search"
+            android:title="search"
+            android:icon="@drawable/search" app:showAsAction="always"/>
+
+    <item
             android:id="@+id/like"
             android:title="like"
             android:icon="@drawable/like" app:showAsAction="always"/>
@@ -15,10 +20,7 @@
             android:title="list"
             android:icon="@drawable/ic_format_list_bulleted_black_24dp" app:showAsAction="always"/>
 
-    <item
-            android:id="@+id/search"
-            android:title="search"
-            android:icon="@drawable/search" app:showAsAction="always"/>
+
 
 
     <item
