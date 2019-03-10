@@ -4,7 +4,7 @@
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
                                              android:layout_height="wrap_content"
-                                             android:id="@+id/simpleContainer">
+                                             >
 
     <ImageView
             android:id="@+id/simpleItemImg"
@@ -15,9 +15,10 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/simple_img_background"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="12dp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:scaleType="centerCrop" app:layout_constraintDimensionRatio="1:1"/>
+            android:scaleType="centerCrop" app:layout_constraintDimensionRatio="1:1"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/simpleName"/>
 
     <TextView
             android:id="@+id/simpleName"
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text="TextView"
             app:layout_constraintStart_toStartOf="@+id/simpleItemImg"
-            app:layout_constraintTop_toBottomOf="@+id/simpleItemImg"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="8dp"/>
+            android:textSize="16sp" android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 </android.support.constraint.ConstraintLayout>

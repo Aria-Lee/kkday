@@ -1,10 +1,13 @@
-package com.example.aria.kkday
+package com.example.aria.kkday.Main
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.EditText
+import com.example.aria.kkday.*
+import com.example.aria.kkday.DetailContent.DetailContentActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
@@ -31,7 +34,14 @@ class MainActivity : AppCompatActivity() {
 
 //        searchView.clearFocus()
 //        window.decorView.requestFocus()
-        adapter = MainAdapter(this, data.getTitleList(), data.getSimpleDataList(), data.getDetailDataList(), recentList, ::intentToDetailContent)
+        adapter = MainAdapter(
+            this,
+            data.getTitleList(),
+            data.getSimpleDataList(),
+            data.getDetailDataList(),
+            recentList,
+            ::intentToDetailContent
+        )
         mainRecyclerView.adapter = adapter
         mainRecyclerView.layoutManager = LinearLayoutManager(this)
     }
@@ -42,6 +52,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+//        searchView.setQuery("", false)
+//        searchView.findViewById<android.support.v7.widget.SearchView.SearchAutoComplete>(R.id.search_src_text).clearFocus()
+        searchView.clearFocus()
+        mainRecyclerView.requestFocus()
         adapter.notifyDataSetChanged()
         super.onResume()
     }

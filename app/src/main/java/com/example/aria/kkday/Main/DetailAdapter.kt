@@ -1,15 +1,16 @@
-package com.example.aria.kkday
+package com.example.aria.kkday.Main
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.example.aria.kkday.DetailData
+import com.example.aria.kkday.R
 import kotlinx.android.synthetic.main.item_view_detail.view.*
 
-class DetailRecyclerViewAdapter(var context: Context, var list: List<DetailData>) :
+class DetailAdapter(var context: Context, var list: List<DetailData>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var mOnItemClickListener: onItemClickListener? = null
@@ -33,12 +34,16 @@ class DetailRecyclerViewAdapter(var context: Context, var list: List<DetailData>
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 //        holder.bind(list[position])
+//        holder.itemView.detailItemImg.setImageResource(list[position].imageId)
         Glide.with(context).load(list[position].imageId).into(holder.itemView.detailItemImg)
         holder.itemView.name.text = list[position].name
         holder.itemView.location.text = list[position].location
         holder.itemView.rating.rating = list[position].rating.toFloat()
         holder.itemView.ratingCount.text = list[position].ratingCount
         holder.itemView.count.text = list[position].count
+        holder.itemView.setOnClickListener {
+            mOnItemClickListener!!.onItemClick(list[position])
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -52,8 +57,8 @@ class DetailRecyclerViewAdapter(var context: Context, var list: List<DetailData>
 //        }
     }
 }
-//
-//class DetailRecyclerViewAdapter(var context: Context, var list: List<DetailData>) : PagerAdapter() {
+
+//class DetailAdapter(var context: Context, var list: List<DetailData>) : PagerAdapter() {
 //
 //    var mOnItemClickListener: onItemClickListener? = null
 //

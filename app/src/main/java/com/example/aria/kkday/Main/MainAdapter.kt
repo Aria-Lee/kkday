@@ -1,15 +1,17 @@
-package com.example.aria.kkday
+package com.example.aria.kkday.Main
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.LinearSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.example.aria.kkday.*
 import kotlinx.android.synthetic.main.main_recyclerview_item_detail.view.*
 import kotlinx.android.synthetic.main.main_recyclerview_item_simple.view.*
+import java.security.AccessController.getContext
 
 class MainAdapter(
     var context: Context,
@@ -27,13 +29,13 @@ class MainAdapter(
         var RECOMMEND = 3
     }
 
-    lateinit var adapter : PagerAdapter
+    lateinit var adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     override fun getItemViewType(position: Int): Int {
         return position
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, type: Int): MainAdapter.ViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, type: Int): ViewHolder {
         var view: View
         when (type) {
             SIMPLE -> {
@@ -52,27 +54,40 @@ class MainAdapter(
         return titleList.size
     }
 
-    override fun onBindViewHolder(holder: MainAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         adapter =
-        when (position) {
-            RECENT -> DetailAdapter(context, recentList)
+            when (position) {
+                RECENT -> DetailAdapter(
+                    context,
+                    recentList
+                )
 
-            SIMPLE -> SimpleAdapter(context, simpleList)
+                SIMPLE -> SimpleAdapter(
+                    context,
+                    simpleList
+                )
 
-            SPRING -> DetailAdapter(context, detailList.take(4))
+                SPRING -> DetailAdapter(
+                    context,
+                    detailList.take(4)
+                )
 
-            RECOMMEND -> DetailAdapter(context, detailList.takeLast(4))
+                RECOMMEND -> DetailAdapter(
+                    context,
+                    detailList.takeLast(4)
+                )
 
-            else -> DetailAdapter(context, detailList.take(4))
-        }
+                else -> DetailAdapter(context, detailList.take(4))
+            }
 
-        if(position != SIMPLE){
-            (adapter as DetailAdapter).setOnItemClickListener(object : DetailAdapter.onItemClickListener {
+        if (position != SIMPLE) {
+            (adapter as DetailAdapter).setOnItemClickListener(object :
+                DetailAdapter.onItemClickListener {
                 override fun onItemClick(data: DetailData) {
                     cb.invoke()
-                    if (data !in recentList){
+                    if (data !in recentList) {
                         recentList.add(data)
-                        adapter.startUpdate(holder.itemView.simpleViewpager)
+                        adapter.notifyDataSetChanged()
                     }
                 }
             })
@@ -80,42 +95,61 @@ class MainAdapter(
 
         holder.bind(titleList[position], adapter)
 
-        if(position ==0 && recentList.size == 0){
+        if (position == 0 && recentList.size == 0) {
             holder.titleView.visibility = View.GONE
-        }else holder.titleView.visibility = View.VISIBLE
+        } else holder.titleView.visibility = View.VISIBLE
     }
 
     class DetailViewHolder(context: Context, itemView: View) : ViewHolder(context, itemView) {
-        override fun bind(title: String, adapter: PagerAdapter) {
+        override fun bind(title: String, adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
             titleView = itemView.titleTextDetail
-            viewPager = itemView.detailViewPager
+            recyclerView = itemView.detailRecyclerView
+            if (isFirstTime) {
+                recyclerView.addItemDecoration(MyItemDecoration(dpToInt(8), dpToInt(12)))
+                LinearSnapHelper().attachToRecyclerView(recyclerView)
+                isFirstTime = false
+            }
             super.bind(title, adapter)
         }
     }
 
     class SimpleViewHolder(context: Context, itemView: View) : ViewHolder(context, itemView) {
-        override fun bind(title: String, adapter: PagerAdapter) {
+        override fun bind(title: String, adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
             titleView = itemView.titleTextSimple
-            viewPager = itemView.simpleViewpager
-            viewPager.setOffscreenPageLimit(2)
+            recyclerView = itemView.simpleRecyclerView
+            if (isFirstTime) {
+                recyclerView.addItemDecoration(MyItemDecoration(dpToInt(4), dpToInt(16)))
+                LeftLinearSnapHelper().attachToRecyclerView(recyclerView)
+                isFirstTime = false
+            }
             super.bind(title, adapter)
         }
     }
 
     open class ViewHolder(var context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
         lateinit var titleView: TextView
-        lateinit var viewPager: ViewPager
-        open fun bind(title: String, adapter: PagerAdapter) {
+        lateinit var recyclerView: RecyclerView
+        var isFirstTime = true
+        open fun bind(title: String, adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
             titleView.text = title
-            viewPager.adapter = adapter
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        }
+
+        fun dpToInt(dp: Int): Int{
+            val scale = context.resources.displayMetrics.density
+            return (dp * scale + 0.5f).toInt()
         }
     }
+
+
 }
 
 //class DetailViewHolder(context: Context, itemView: View) : ViewHolder(context, itemView) {
 //    override fun bind(title: String, adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
 //        titleView = itemView.titleTextDetail
-//        viewPager = itemView.itemRecyclerViewDetail
+//        recyclerView = itemView.itemRecyclerViewDetail
 //        super.bind(title, adapter)
 //    }
 //}
@@ -123,17 +157,17 @@ class MainAdapter(
 //class SimpleViewHolder(context: Context, itemView: View) : ViewHolder(context, itemView) {
 //    override fun bind(title: String, adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
 //        titleView = itemView.titleTextSimple
-//        viewPager = itemView.itemRecyclerViewSimple
+//        recyclerView = itemView.itemRecyclerViewSimple
 //        super.bind(title, adapter)
 //    }
 //}
 //
 //open class ViewHolder(var context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
 //    lateinit var titleView: TextView
-//    lateinit var viewPager: RecyclerView
+//    lateinit var recyclerView: RecyclerView
 //    open fun bind(title: String, adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
 //        titleView.text = title
-//        viewPager.adapter = adapter
-//        viewPager.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+//        recyclerView.adapter = adapter
+//        recyclerView.layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
 //    }
 //}
